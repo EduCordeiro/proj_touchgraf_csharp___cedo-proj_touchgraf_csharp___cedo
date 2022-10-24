@@ -1,0 +1,11 @@
+	{
+		"PathEntrada": "@PathLocalApp\\IN",
+		"PathSaida": "@PathLocalApp\\OUT",
+		"Extensao": "*.txt",
+		"Tentar_conectar_Mysql": "true",
+		"Database" : "@Database",
+		"Tabela_Processamento": "@Database.processamento",
+		"Tabela_Controle_arquivos": "@Database.controle_arquivos",
+		"Tabela_Controle_lotes": "@Database.lotes_pedidos",
+		"Uri":"server=localhost;uid=root;pwd=123456;database=mysql"
+	}
