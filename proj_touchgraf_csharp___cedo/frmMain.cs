@@ -109,6 +109,7 @@ namespace proj_touchgraf_csharp___cedo
             //======================================================================================================================================================
             DataProcessamento = this.dtp_DataProcessamento.Value.Date;
             oCore.oConfig.DataProcessamento = string.Format("{0:dd/MM/yyyy}", DataProcessamento);
+            oCore.oConfig.DataProcessamento_YYYYMMDD = string.Format("{0:yyyyMMdd}", DataProcessamento);
 
             oCore.oConfig.PathEntrada = oCore.ajustaPath(txt_PathEntrada.Text);
             oCore.oConfig.PathSaida = oCore.ajustaPath(txt_PathSaida.Text);

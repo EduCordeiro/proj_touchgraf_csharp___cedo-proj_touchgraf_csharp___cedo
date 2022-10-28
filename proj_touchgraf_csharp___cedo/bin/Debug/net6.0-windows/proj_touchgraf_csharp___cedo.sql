@@ -4,43 +4,97 @@ USE @Database;
 
 DROP TABLE IF EXISTS @Tabela_Processamento;
 CREATE TABLE IF NOT EXISTS @Tabela_Processamento (
-   SEQUENCIA                  INTEGER
-  ,FIELD_01                   varchar(009) default NULL
-  ,FIELD_02                   varchar(009) default NULL
-  ,FIELD_03                   varchar(009) default NULL
-  ,FIELD_04                   varchar(010) default NULL
-  ,FIELD_05                   varchar(015) default NULL
-  ,FIELD_06                   varchar(021) default NULL
-  ,FIELD_07                   varchar(011) default NULL
-  ,FIELD_08                   varchar(018) default NULL
-  ,FIELD_09                   varchar(005) default NULL
-  ,FIELD_10                   varchar(039) default NULL
-  ,FIELD_11                   varchar(001) default NULL
-  ,CIF                        varchar(034) default NULL
-  ,PAGINAS                    INTEGER
-  ,FOLHAS                     INTEGER
-  ,PAGINA_INICIAL             INTEGER
-  ,PAGINA_FINAL               INTEGER
-  ,NOME                       varchar(040) default NULL
-  ,LOGRADOURO                 varchar(100) default NULL
-  ,CEP                        varchar(009) default NULL
-  ,FILLER_01                  varchar(001) default NULL
-  ,FILLER_02                  varchar(001) default NULL
-  ,FILLER_03                  varchar(001) default NULL
-  ,FILLER_04                  varchar(001) default NULL
-  ,FILLER_05                  varchar(001) default NULL
-  ,CODIGO_BARRAS              varchar(044) default NULL
-  ,FILLER_06                  varchar(001) default NULL
-  ,FILLER_07                  varchar(005) default NULL
-  ,NOME_2                     varchar(040) default NULL
-  ,DEVOLUCAO                  varchar(010) default NULL
-  ,LOTE                       varchar(005) default NULL
-  ,DATA_POSTAGEM              varchar(006) default NULL
-  ,ARQUIVO_IDX                varchar(050) default NULL
-  ,ARQUIVO_AFP                varchar(050) default NULL
-  ,ARQUIVO_ZIP                varchar(050) default NULL
-  ,MOVIMENTO                  varchar(008) default NULL
+   DATA_GERACAO_ARQUIVO_CEDO    varchar(008) default NULL
+  ,HORA_GERACAO_ARQUIVO         varchar(004) default NULL
+  ,CIF                          varchar(034) default NULL
+  ,CODIGO_MOTIVO_DEVOLUCAO      varchar(002) default NULL
+  ,MOTIVO_DEVOLUCAO             varchar(050) default NULL
+  ,SEQUENCIA                    int          NOT NULL auto_increment
+  ,N_CONTRATO                   varchar(016) default NULL
+  ,N_CHASSI                     varchar(020) default NULL
+  ,CPF_CNPJ_CLIENTE             varchar(014) default NULL
+  ,NOME_CLIENTE                 varchar(030) default NULL
+  ,VALOR_CARNE                  varchar(015) default NULL
+  ,QTD_PARCELAS                 varchar(003) default NULL
+  ,DT_VENCIMENTO                varchar(008) default NULL
+  ,STATUS                       varchar(020) default NULL
+  ,CODIGO_POSTAGEM_CORREIOS     varchar(034) default NULL
+  ,ENDERECO                     varchar(060) default NULL
+  ,BAIRRO                       varchar(030) default NULL
+  ,CIDADE                       varchar(030) default NULL
+  ,UF                           varchar(002) default NULL
+  ,CEP                          varchar(008) default NULL
+  ,ARQUIVO_ORIGEM_BANCO         varchar(013) default NULL
+  ,DTA_REFERENCIA               varchar(008) default NULL
+  ,DTA_POSTAGEM                 varchar(008) default NULL
+  ,LINHA_REL_NEW                TEXT
+  ,PRIMARY KEY  (SEQUENCIA)
 );
+
+CREATE TABLE IF NOT EXISTS @Tabela_Processamento_history (
+   DATA_PROCESSAMENTO           varchar(008) default NULL
+  ,DATA_GERACAO_ARQUIVO_CEDO    varchar(008) default NULL
+  ,HORA_GERACAO_ARQUIVO         varchar(004) default NULL
+  ,CIF                          varchar(034) default NULL
+  ,CODIGO_MOTIVO_DEVOLUCAO      varchar(002) default NULL
+  ,MOTIVO_DEVOLUCAO             varchar(050) default NULL
+  ,SEQUENCIA                    int          NOT NULL auto_increment
+  ,N_CONTRATO                   varchar(016) default NULL
+  ,N_CHASSI                     varchar(020) default NULL
+  ,CPF_CNPJ_CLIENTE             varchar(014) default NULL
+  ,NOME_CLIENTE                 varchar(030) default NULL
+  ,VALOR_CARNE                  varchar(015) default NULL
+  ,QTD_PARCELAS                 varchar(003) default NULL
+  ,DT_VENCIMENTO                varchar(008) default NULL
+  ,STATUS                       varchar(020) default NULL
+  ,CODIGO_POSTAGEM_CORREIOS     varchar(034) default NULL
+  ,ENDERECO                     varchar(060) default NULL
+  ,BAIRRO                       varchar(030) default NULL
+  ,CIDADE                       varchar(030) default NULL
+  ,UF                           varchar(002) default NULL
+  ,CEP                          varchar(008) default NULL
+  ,ARQUIVO_ORIGEM_BANCO         varchar(013) default NULL
+  ,DTA_REFERENCIA               varchar(008) default NULL
+  ,DTA_POSTAGEM                 varchar(008) default NULL
+  ,LINHA_ORIGEM                 TEXT
+  ,LINHA_REL_ORIGEM             TEXT
+  ,LINHA_REL_NEW                TEXT
+  ,PRIMARY KEY  (SEQUENCIA)
+);
+
+DROP TABLE IF EXISTS @Tabela_Codigos_status;
+CREATE TABLE IF NOT EXISTS @Tabela_Codigos_status(
+   CODIGO               varchar(002)          NOT NULL
+  ,DESCRICAO            varchar(050)          NOT NULL
+  ,PRIMARY KEY (CODIGO)
+  ,KEY idx_codigos_motivos_devolucao (CODIGO)
+);
+
+INSERT INTO @Tabela_Codigos_status(CODIGO, DESCRICAO)
+       VALUES("01", "IMPRESSÃO") 
+	        ,("02", "CEP INCONSISTENTE") 
+            ,("03", "CEP INCONSISTENTE")
+			,("04", "CEP INCONSISTENTE")
+			,("05", "RETENÇÃO");
+
+DROP TABLE IF EXISTS @Tabela_Codigos_motivos_devolucao;
+CREATE TABLE IF NOT EXISTS @Tabela_Codigos_motivos_devolucao(
+   CODIGO               varchar(002)          NOT NULL
+  ,DESCRICAO            varchar(050)          NOT NULL
+  ,PRIMARY KEY (CODIGO)
+  ,KEY idx_codigos_motivos_devolucao (CODIGO)
+);
+
+INSERT INTO @Tabela_Codigos_motivos_devolucao(CODIGO, DESCRICAO)
+       VALUES("01", "Mudou-se") 
+            ,("02", "Endereço insuficiente")
+			,("03", "Não existe o nº. indicado")
+			,("04", "Falecido")
+			,("05", "Desconhecido")
+			,("06", "Recusado")
+			,("07", "Ausente")
+			,("08", "Não procurado")
+			,("09", "Outros");
 
 /*DROP TABLE IF EXISTS @Tabela_Controle_arquivos;*/
 CREATE TABLE IF NOT EXISTS @Tabela_Controle_arquivos (

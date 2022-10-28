@@ -5,7 +5,13 @@
 		"Tentar_conectar_Mysql": "true",
 		"Database" : "@Database",
 		"Tabela_Processamento": "@Database.processamento",
+		"Tabela_Processamento_history": "@Database.processamento_history",
+		"Tabela_Codigos_status": "@Database.Codigos_status",
+		"Tabela_Codigos_motivos_devolucao": "@Database.Codigos_motivos_devolucao",
 		"Tabela_Controle_arquivos": "@Database.controle_arquivos",
 		"Tabela_Controle_lotes": "@Database.lotes_pedidos",
-		"Uri":"server=localhost;uid=root;pwd=123456;database=mysql"
+		"Tabela_Relatorio": "proj_touchgraf_delphi__relatorio_diario.track_line",
+		"Uri":"server=localhost;uid=root;pwd=123456;database=mysql",
+		"ProdutoCarneEspecifico":"120",
+		"ProdutoCarneEspecificoLabel":"IMPRESSAO/PDF"
 	}

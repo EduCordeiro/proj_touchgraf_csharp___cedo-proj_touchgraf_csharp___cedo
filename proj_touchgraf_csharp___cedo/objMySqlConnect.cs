@@ -3,15 +3,16 @@ using System.Runtime.CompilerServices;
 
 namespace proj_touchgraf_csharp___cedo
 {
-    public sealed class objMySqlConnect
+    //public sealed class objMySqlConnect
+    public class objMySqlConnect
     {
-        private static objMySqlConnect ?_instance; // = new objMySqlConnect();
+        //private static objMySqlConnect ?_instance; // = new objMySqlConnect();
         public int iTotalDeInstancias { get; set; }
         public MySqlConnection ?conn;
         //private String ?Uri { get; set; }
 
 
-        private objMySqlConnect(String uri)
+        public objMySqlConnect(String uri)
         {
 
             try
@@ -42,6 +43,7 @@ namespace proj_touchgraf_csharp___cedo
 
         }
 
+        /*
         public static objMySqlConnect getInstance(String uri)
         {
 
@@ -52,6 +54,8 @@ namespace proj_touchgraf_csharp___cedo
 
             return _instance;
         }
+        */
+        
 
 
     }

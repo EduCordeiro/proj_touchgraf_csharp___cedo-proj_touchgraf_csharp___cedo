@@ -6,9 +6,11 @@ using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace proj_touchgraf_csharp___cedo
@@ -22,16 +24,20 @@ namespace proj_touchgraf_csharp___cedo
         // Usando o padrão Singleton
         //========================================
         public objMySqlConnect ?oMySqlConnection;
+        public objMySqlConnect? oMySqlConnection2;
         //========================================
 
         private MySqlCommand ?ComandoSQL;
+        private MySqlCommand? ComandoSQL2;
         private MySqlDataReader ?readerMySql;
-        
+        private MySqlDataReader? readerMySql2;
+
 
         public ObjCore()
         {
             
-            ComandoSQL = new MySqlCommand();            
+            ComandoSQL = new MySqlCommand();
+            ComandoSQL2 = new MySqlCommand();
 
             string sPathEXE = ajustaPath(System.AppDomain.CurrentDomain.BaseDirectory.ToString());
             //string sPathEXE_Anterior = sPathEXE.Substring(0, sPathEXE.LastIndexOf("\\", sPathEXE.Length - 2)) + "\\" + "Teste";
@@ -77,14 +83,18 @@ namespace proj_touchgraf_csharp___cedo
                         try
                         {
 
-                            oMySqlConnection = objMySqlConnect.getInstance(oConfig.Uri);
+                            //oMySqlConnection = objMySqlConnect.getInstance(oConfig.Uri);
+                            //oMySqlConnection2 = objMySqlConnect.getInstance(oConfig.Uri);
 
+                            oMySqlConnection = new objMySqlConnect(oConfig.Uri);
+                            oMySqlConnection2 = new objMySqlConnect(oConfig.Uri);
 
 
                             // Pegando a conexão Singleton
                             if (oMySqlConnection != null)
                             {
                                 ComandoSQL.Connection = oMySqlConnection.conn;
+                                ComandoSQL2.Connection = oMySqlConnection2.conn;
 
                                 //==========================================================================================
                                 //                                  TESTE DE CONEXAO
@@ -121,6 +131,9 @@ namespace proj_touchgraf_csharp___cedo
 
                                 ComandoSQL.CommandText = sScriptSQLContet.Replace("@Database", oConfig.Database)
                                                                          .Replace("@Tabela_Processamento", oConfig.Tabela_Processamento)
+                                                                         .Replace("@Tabela_Processamento_history", oConfig.Tabela_Processamento_history)
+                                                                         .Replace("@Tabela_Codigos_status", oConfig.Tabela_Codigos_status)
+                                                                         .Replace("@Tabela_Codigos_motivos_devolucao", oConfig.Tabela_Codigos_motivos_devolucao)
                                                                          .Replace("@Tabela_Controle_arquivos", oConfig.Tabela_Controle_arquivos)
                                                                          .Replace("@Tabela_Controle_lotes", oConfig.Tabela_Controle_lotes)
                                                                          ;
@@ -155,18 +168,39 @@ namespace proj_touchgraf_csharp___cedo
             // Lendo o arquivo
             //====================================
             int counter = 0;
-            string sField_01 = "";
-            string sField_02 = "";
-            string sField_03 = "";
-            string sField_04 = "";
-            string sField_05 = "";
-            string sField_06 = "";
-            string sField_07 = "";
-            string sField_08 = "";
-            string sField_09 = "";
-            string sField_10 = "";
-            string sField_11 = "";
-            string sArquivoAFP = "";
+
+            string sLinha = String.Empty;
+            string sLinhaRel = String.Empty;
+            string sTIPO_REGISTRO = String.Empty;
+            string sTIPO_DOCUMENTO = String.Empty;
+            string sDATA_GERACAO_ARQUIVO_CEDO = String.Empty;
+            string sHORA_GERACAO_ARQUIVO = String.Empty;
+            string sCIF = String.Empty;
+            string sCODIGO_MOTIVO_DEVOLUCAO = String.Empty;
+            string sCODIGO_STATUS = String.Empty;
+
+            string sSEQUENCIA = String.Empty;
+
+            string sN_CONTRATO = String.Empty;
+            string sN_CHASSI = String.Empty;
+            string sCPF_CNPJ_CLIENTE = String.Empty;
+            string sNOME_CLIENTE = String.Empty;
+            string sVALOR_CARNE = String.Empty;
+            string sQTD_PARCELAS = String.Empty;
+            string sDT_VENCIMENTO = String.Empty;
+            string ?sSTATUS = String.Empty;
+            string sCODIGO_POSTAGEM_CORREIOS = String.Empty;
+            string sENDERECO = String.Empty;
+            string sBAIRRO = String.Empty;
+            string sCIDADE = String.Empty;
+            string sUF = String.Empty;
+            string sCEP = String.Empty;
+            string sARQUIVO_ORIGEM_BANCO = String.Empty;
+            string sDTA_REFERENCIA = String.Empty;
+            string sDATA_POSTAGEM = String.Empty;
+            string sMOTIVO_DEVOLUCAO = String.Empty;
+
+            string sProdutoCarne = String.Empty;
 
 
             //==========================================================================================
@@ -178,48 +212,282 @@ namespace proj_touchgraf_csharp___cedo
             {                
                 counter++;
 
-                sField_01 = line.Substring(0, 9).Trim();
-                sField_02 = line.Substring(16, 9).Trim();
-                sField_03 = line.Substring(25, 9).Trim();
-                sField_04 = line.Substring(34, 10).Trim();
-                sField_05 = line.Substring(44, 15).Trim();
-                sField_06 = line.Substring(61, 21).Trim();
-                sField_07 = line.Substring(81, 11).Trim();
-                sField_08 = line.Substring(92, 18).Trim();
-                sField_09 = line.Substring(110, 5).Trim();
-                sField_10 = line.Substring(115, 39).Trim();
-                sField_11 = line.Substring(154, 1).Trim();
-                sArquivoAFP = line.Substring(897, 50).Trim();
+                sTIPO_REGISTRO = line.Substring(0, 1).Trim();
 
-                //==========================================================================================
-                //
-                // INSERE O REGISTRO NO BANCO
-                //
-                //==========================================================================================
-                ComandoSQL.CommandText = "INSERT INTO "
-                                       + oConfig.Tabela_Processamento
-                                       + " (FIELD_01, FIELD_02, FIELD_03, FIELD_04, FIELD_05, FIELD_06, FIELD_07, FIELD_08, FIELD_09, FIELD_10, FIELD_11, ARQUIVO_AFP) "
-                                       + "VALUES("
-                                       +  "'" + sField_01 + "'"
-                                       + ",'" + sField_02 + "'"
-                                       + ",'" + sField_03 + "'"
-                                       + ",'" + sField_04 + "'"
-                                       + ",'" + sField_05 + "'"
-                                       + ",'" + sField_06 + "'"
-                                       + ",'" + sField_07 + "'"
-                                       + ",'" + sField_08 + "'"
-                                       + ",'" + sField_09 + "'"
-                                       + ",'" + sField_10 + "'"
-                                       + ",'" + sField_11 + "'"
-                                       + ",'" + sArquivoAFP + "'"
-                                       + ")";
-                ComandoSQL.ExecuteNonQuery();
-                //==========================================================================================
+                if(sTIPO_REGISTRO == "1")
+                {
+                    sDATA_GERACAO_ARQUIVO_CEDO = line.Substring(1, 8).Trim();
+                    sHORA_GERACAO_ARQUIVO = line.Substring(9, 4).Trim();
+                }
+
+                if(sTIPO_REGISTRO == "2")
+                {
+
+                    //==========================================================================================
+                    //
+                    // BUSCANDO O REGISTRO NA TABELA DE RELATÓRIOS DIÁRIOS PARA CRIAR O CEDO
+                    //
+                    //==========================================================================================
+                    sCIF = line.Substring(1, 34).Trim();
+                    ComandoSQL.CommandText = " SELECT LINHA, TIPO_DOCUMENTO, MOVIMENTO, STATUS_REGISTRO, DATA_POSTAGEM FROM " + oConfig.Tabela_Relatorio
+                                           + " WHERE CIF = '" + sCIF + "'";
+                    /*
+                    ComandoSQL.Parameters.Clear();
+                    ComandoSQL.Parameters.AddWithValue("@id", "1");
+                    */
+
+                    ComandoSQL.Prepare();
+
+                    using (readerMySql = ComandoSQL.ExecuteReader())
+                    {
+                        while (readerMySql.Read())
+                        {
+
+                            //==========================================================================================
+                            //
+                            // BUSCANDO O ERRO NA TABELA DE CÓDIGOS DE ERRO CEDO
+                            //
+                            //==========================================================================================                            
+                            sCODIGO_MOTIVO_DEVOLUCAO = line.Substring(35, 2).Trim();
+                            ComandoSQL2.CommandText = " SELECT DESCRICAO FROM " + oConfig.Tabela_Codigos_motivos_devolucao
+                                                   + " WHERE CODIGO = '" + sCODIGO_MOTIVO_DEVOLUCAO + "' "
+                                                   + " LIMIT 1";
+                            ComandoSQL2.Prepare();                            
+                            using (readerMySql2 = ComandoSQL2.ExecuteReader())
+                            {
+                                while (readerMySql2.Read())
+                                    sMOTIVO_DEVOLUCAO = readerMySql2.GetString(0);
+                            }
+                            //==========================================================================================
+
+                            //==========================================================================================
+                            //
+                            // BUSCANDO O STATUS NA TABELA DE STATUS
+                            //
+                            //==========================================================================================                            
+                            sCODIGO_STATUS = readerMySql.GetString(3);
+                            ComandoSQL2.CommandText = " SELECT DESCRICAO FROM " + oConfig.Tabela_Codigos_status
+                                                   + " WHERE CODIGO = '" + sCODIGO_MOTIVO_DEVOLUCAO + "' "
+                                                   + " LIMIT 1";
+                            ComandoSQL2.Prepare();
+                            using (readerMySql2 = ComandoSQL2.ExecuteReader())
+                            {
+                                while (readerMySql2.Read())
+                                    sSTATUS = readerMySql2.GetString(0);
+                            }
+                            //==========================================================================================
+                            
+
+                            sTIPO_DOCUMENTO = readerMySql.GetString(1);                            
+
+                            if (sTIPO_DOCUMENTO == "CARNE") {
+
+                                sLinha = readerMySql.GetString(0);
+
+                                sProdutoCarne = sLinha.Substring(23, 3).Trim();
+
+                                if (oConfig.ProdutoCarneEspecifico == sProdutoCarne)
+                                    sSTATUS = oConfig.ProdutoCarneEspecificoLabel;
+
+                                sN_CONTRATO = sLinha.Substring(0019, 16).Trim();
+                                sN_CHASSI = sLinha.Substring(2167, 20).Trim();
+                                sCPF_CNPJ_CLIENTE = sLinha.Substring(0593, 14).Trim();
+                                sNOME_CLIENTE = sLinha.Substring(0100, 30).Trim();
+                                sVALOR_CARNE = sLinha.Substring(1813, 15).Trim();
+                                sQTD_PARCELAS = sLinha.Substring(0499, 3).Trim();
+                                sDT_VENCIMENTO = sLinha.Substring(0046, 8).Trim();
+                                sCODIGO_POSTAGEM_CORREIOS = sLinha.Substring(1898, 34).Trim();
+                                sENDERECO = sLinha.Substring(0712, 60).Trim();
+                                sBAIRRO = sLinha.Substring(0807, 30).Trim();
+                                sCIDADE = sLinha.Substring(0837, 30).Trim();
+                                sUF = sLinha.Substring(0867, 2).Trim();
+                                sCEP = sLinha.Substring(0869, 8).Trim();
+                                sARQUIVO_ORIGEM_BANCO = sLinha.Substring(2033, 13).Trim();
+                                sDTA_REFERENCIA = readerMySql.GetString(2);
+
+                                sDATA_POSTAGEM = readerMySql.GetString(4);
+
+                                //==========================================================================================
+                                //
+                                // LINHA RELATÓRIO
+                                //
+                                //==========================================================================================
+                                sLinhaRel = sN_CONTRATO
+                                    + ";" + sN_CHASSI
+                                    + ";" + sCPF_CNPJ_CLIENTE
+                                    + ";" + sNOME_CLIENTE
+                                    + ";" + sVALOR_CARNE
+                                    + ";" + sQTD_PARCELAS
+                                    + ";" + sDT_VENCIMENTO
+                                    + ";" + sSTATUS
+                                    + ";" + sCODIGO_POSTAGEM_CORREIOS
+                                    + ";" + sENDERECO
+                                    + ";" + sBAIRRO
+                                    + ";" + sCIDADE
+                                    + ";" + sUF
+                                    + ";" + sCEP
+                                    + ";" + sARQUIVO_ORIGEM_BANCO
+                                    + ";" + sDTA_REFERENCIA
+                                    + ";" + sDATA_POSTAGEM
+                                    + ";" + sMOTIVO_DEVOLUCAO
+                                   ;
+
+                                //==========================================================================================
+                                //
+                                // INSERINDO NA TABELA PROCESSAMENTO
+                                //
+                                //==========================================================================================
+                                ComandoSQL2.CommandText = "INSERT INTO " + oConfig.Tabela_Processamento
+                                                   + " ("
+                                                   + "  DATA_GERACAO_ARQUIVO_CEDO "
+                                                   + ", HORA_GERACAO_ARQUIVO"
+                                                   + ", CIF"
+                                                   + ", CODIGO_MOTIVO_DEVOLUCAO"
+                                                   + ", MOTIVO_DEVOLUCAO"
+                                                   + ", N_CONTRATO"
+                                                   + ", N_CHASSI"
+                                                   + ", CPF_CNPJ_CLIENTE"
+                                                   + ", NOME_CLIENTE"
+                                                   + ", VALOR_CARNE"
+                                                   + ", QTD_PARCELAS"
+                                                   + ", DT_VENCIMENTO "
+                                                   + ", STATUS "
+                                                   + ", CODIGO_POSTAGEM_CORREIOS "
+                                                   + ", ENDERECO "
+                                                   + ", BAIRRO "
+                                                   + ", CIDADE "
+                                                   + ", UF "
+                                                   + ", CEP "
+                                                   + ", ARQUIVO_ORIGEM_BANCO "
+                                                   + ", DTA_REFERENCIA "
+                                                   + ", DTA_POSTAGEM"
+                                                   + ", LINHA_REL_NEW"
+                                                   + ") "
+                                                   + "VALUES("
+                                                   + "'"  + sDATA_GERACAO_ARQUIVO_CEDO + "'"
+                                                   + ",'" + sHORA_GERACAO_ARQUIVO + "'"
+                                                   + ",'" + sCIF + "'"
+                                                   + ",'" + sCODIGO_MOTIVO_DEVOLUCAO + "'"
+                                                   + ",'" + sMOTIVO_DEVOLUCAO + "'"
+                                                   + ",'" + sN_CONTRATO + "'"
+                                                   + ",'" + sN_CHASSI + "'"
+                                                   + ",'" + sCPF_CNPJ_CLIENTE + "'"
+                                                   + ",'" + sNOME_CLIENTE + "'"
+                                                   + ",'" + sVALOR_CARNE + "'"
+                                                   + ",'" + sQTD_PARCELAS + "'"
+                                                   + ",'" + sDT_VENCIMENTO + "'"
+                                                   + ",'" + sSTATUS + "'"
+                                                   + ",'" + sCODIGO_POSTAGEM_CORREIOS + "'"
+                                                   + ",'" + sENDERECO + "'"
+                                                   + ",'" + sBAIRRO + "'"
+                                                   + ",'" + sCIDADE + "'"
+                                                   + ",'" + sUF + "'"
+                                                   + ",'" + sCEP + "'"
+                                                   + ",'" + sARQUIVO_ORIGEM_BANCO + "'"
+                                                   + ",'" + sDTA_REFERENCIA + "'"
+                                                   + ",'" + sDATA_POSTAGEM + "'"
+                                                   + ",'" + sLinhaRel + "'"
+                                                   + ")";
+                                ComandoSQL2.ExecuteNonQuery();
+                                //==========================================================================================
+
+
+
+                                //==========================================================================================
+                                //
+                                // INSERINDO NA TABELA PROCESSAMENTO HISTORY
+                                //
+                                //==========================================================================================
+                                ComandoSQL2.CommandText = "INSERT INTO " + oConfig.Tabela_Processamento_history
+                                                   + " ("
+                                                   + "  DATA_PROCESSAMENTO "
+                                                   + ", DATA_GERACAO_ARQUIVO_CEDO "
+                                                   + ", HORA_GERACAO_ARQUIVO"
+                                                   + ", CIF"
+                                                   + ", CODIGO_MOTIVO_DEVOLUCAO"
+                                                   + ", MOTIVO_DEVOLUCAO"
+                                                   + ", N_CONTRATO"
+                                                   + ", N_CHASSI"
+                                                   + ", CPF_CNPJ_CLIENTE"
+                                                   + ", NOME_CLIENTE"
+                                                   + ", VALOR_CARNE"
+                                                   + ", QTD_PARCELAS"
+                                                   + ", DT_VENCIMENTO "
+                                                   + ", STATUS "
+                                                   + ", CODIGO_POSTAGEM_CORREIOS "
+                                                   + ", ENDERECO "
+                                                   + ", BAIRRO "
+                                                   + ", CIDADE "
+                                                   + ", UF "
+                                                   + ", CEP "
+                                                   + ", ARQUIVO_ORIGEM_BANCO "
+                                                   + ", DTA_REFERENCIA "
+                                                   + ", DTA_POSTAGEM"
+                                                   + ", LINHA_ORIGEM"
+                                                   + ", LINHA_REL_NEW"
+                                                   + ") "
+                                                   + "VALUES("
+                                                   + " '" + oConfig.DataProcessamento_YYYYMMDD + "'"
+                                                   + ",'" + sDATA_GERACAO_ARQUIVO_CEDO + "'"
+                                                   + ",'" + sHORA_GERACAO_ARQUIVO + "'"
+                                                   + ",'" + sCIF + "'"
+                                                   + ",'" + sCODIGO_MOTIVO_DEVOLUCAO + "'"
+                                                   + ",'" + sMOTIVO_DEVOLUCAO + "'"
+                                                   + ",'" + sN_CONTRATO + "'"
+                                                   + ",'" + sN_CHASSI + "'"
+                                                   + ",'" + sCPF_CNPJ_CLIENTE + "'"
+                                                   + ",'" + sNOME_CLIENTE + "'"
+                                                   + ",'" + sVALOR_CARNE + "'"
+                                                   + ",'" + sQTD_PARCELAS + "'"
+                                                   + ",'" + sDT_VENCIMENTO + "'"
+                                                   + ",'" + sSTATUS + "'"
+                                                   + ",'" + sCODIGO_POSTAGEM_CORREIOS + "'"
+                                                   + ",'" + sENDERECO + "'"
+                                                   + ",'" + sBAIRRO + "'"
+                                                   + ",'" + sCIDADE + "'"
+                                                   + ",'" + sUF + "'"
+                                                   + ",'" + sCEP + "'"
+                                                   + ",'" + sARQUIVO_ORIGEM_BANCO + "'"
+                                                   + ",'" + sDTA_REFERENCIA + "'"
+                                                   + ",'" + sDATA_POSTAGEM + "'"
+                                                   + ",'" + sLinha + "'"
+                                                   + ",'" + sLinhaRel + "'"
+                                                   + ")";
+                                ComandoSQL2.ExecuteNonQuery();
+                                //==========================================================================================
+
+
+
+
+                            }
+
+                        }
+                    }
+
+
+                }
+
 
 
             }
 
+            /*
+            //==========================================================================================
+            //
+            // INSERINDO NA TABELA DE CONTROLE DE ARQUIVOS
+            //
+            //==========================================================================================
+            ComandoSQL.CommandText = "INSERT INTO "
+                                + oConfig.Tabela_Processamento
+                                + " (FIELD_01, FIELD_02, FIELD_03, FIELD_04, FIELD_05, FIELD_06, FIELD_07, FIELD_08, FIELD_09, FIELD_10, FIELD_11, ARQUIVO_AFP) "
+                                + "VALUES("
+                                   //+ "'" + sField_01 + "'"
+                                   //+ ",'" + sField_02 + "'"
 
+                                   + ")";
+            ComandoSQL.ExecuteNonQuery();
+            //==========================================================================================
+            */
 
         }
 
@@ -230,20 +498,7 @@ namespace proj_touchgraf_csharp___cedo
             // GRAVANDO OS DADOS NO BANCO APÓS CARGA
             //
             //==========================================================================================
-            ComandoSQL.CommandText = "SELECT FIELD_01"
-                                        + ", FIELD_02"
-                                        + ", FIELD_03"
-                                        + ", FIELD_04"
-                                        + ", FIELD_05"
-                                        + ", FIELD_06"
-                                        + ", FIELD_07"
-                                        + ", FIELD_08"
-                                        + ", FIELD_09"
-                                        + ", FIELD_10"
-                                        + ", FIELD_11"
-                                        + ", ARQUIVO_AFP"
-                                   + " FROM "
-                                   + oConfig.Tabela_Processamento;
+            ComandoSQL.CommandText = "SELECT LINHA_REL_NEW FROM " + oConfig.Tabela_Processamento;
             //+ " WHERE id = @id ";
             /*
             ComandoSQL.Parameters.Clear();
@@ -272,50 +527,33 @@ namespace proj_touchgraf_csharp___cedo
                 using (StreamWriter swProc = new StreamWriter(streamProc))
                 {
 
-                    string sLinha = "";
-                    string sFIELD_01 = "";
-                    string sFIELD_02 = "";
-                    string sFIELD_03 = "";
-                    string sFIELD_04 = "";
-                    string sFIELD_05 = "";
-                    string sFIELD_06 = "";
-                    string sFIELD_07 = "";
-                    string sFIELD_08 = "";
-                    string sFIELD_09 = "";
-                    string sFIELD_10 = "";
-                    string sFIELD_11 = "";
-                    string sARQUIVO_AFP = "";
+                    
 
+                    string sLinha = "N_CONTRATO"
+                                  + ";N_CHASSI"
+                                  + ";CPF/CNPJ CLIENTE"
+                                  + ";NOME CLIENTE"
+                                  + ";VALOR CARNE"
+                                  + ";QTD PARCELAS"
+                                  + ";DT VENCIMENTO"
+                                  + ";STATUS"
+                                  + ";CODIGO POSTAGEM CORREIOS"
+                                  + ";ENDEREÇO"
+                                  + ";BAIRRO"
+                                  + ";CIDADE"
+                                  + ";UF"
+                                  + ";CEP"
+                                  + ";ARQUIVO"
+                                  + ";DTA_REFERENCIA"
+                                  + ";DATA CIF"
+                                  + ";MOTIVO"
+                                  ;
+                    swProc.WriteLine(sLinha);
 
                     while (readerMySql.Read())
                     {
 
-                        sFIELD_01       = readerMySql.GetString(0);
-                        sFIELD_02       = readerMySql.GetString(1);
-                        sFIELD_03       = readerMySql.GetString(2);
-                        sFIELD_04       = readerMySql.GetString(3);
-                        sFIELD_05       = readerMySql.GetString(4);
-                        sFIELD_06       = readerMySql.GetString(5);
-                        sFIELD_07       = readerMySql.GetString(6);
-                        sFIELD_08       = readerMySql.GetString(7);
-                        sFIELD_09       = readerMySql.GetString(8);
-                        sFIELD_10       = readerMySql.GetString(9);
-                        sFIELD_11       = readerMySql.GetString(10);
-                        sARQUIVO_AFP    = readerMySql.GetString(11);
-
-
-                        sLinha = sFIELD_01.Trim()
-                               + sFIELD_02.Trim()
-                               + sFIELD_03.Trim()
-                               + sFIELD_04.Trim()
-                               + sFIELD_05.Trim()
-                               + sFIELD_06.Trim()
-                               + sFIELD_07.Trim()
-                               + sFIELD_08.Trim()
-                               + sFIELD_09.Trim()
-                               + sFIELD_10.Trim()
-                               + sFIELD_11.Trim().PadRight(10)
-                               + sARQUIVO_AFP.Trim();
+                        sLinha = readerMySql.GetString(0);
 
                         swProc.WriteLine(sLinha);
 
@@ -328,7 +566,7 @@ namespace proj_touchgraf_csharp___cedo
             //==========================================================================================
         }
 
-        public string ajustaPath(string path)
+        public string ajustaPath(string ?path)
         {
             string result = "";
 
