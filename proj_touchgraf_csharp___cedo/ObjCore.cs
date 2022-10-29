@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Data;
@@ -11,6 +12,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.Net.NetworkInformation;
 
 
 namespace proj_touchgraf_csharp___cedo
@@ -140,6 +143,8 @@ namespace proj_touchgraf_csharp___cedo
                                 ComandoSQL.ExecuteNonQuery();
                                 //======================================================================
 
+                                startListaArquivoJaProcessados();
+
                             }
                         }
                         catch (Exception ex)
@@ -153,16 +158,24 @@ namespace proj_touchgraf_csharp___cedo
 
         }
 
-        public void ProcessarArquivo(string arquivoTXT, string pathSaida)
+        public void LimparTabelaProcessamento()
         {
-
-            
-
-            //====================================
+            //========================================================================
             // Limpando tabela de processamento
-            //====================================
+            //========================================================================
             ComandoSQL.CommandText = "DELETE FROM " + oConfig.Tabela_Processamento;
             ComandoSQL.ExecuteNonQuery();
+            //========================================================================
+        }
+
+        public void ProcessarArquivo(string arquivoTXT, string pathSaida, bool LimparTabela=true)
+        {
+
+            if(LimparTabela)
+              LimparTabelaProcessamento();
+
+
+            string sArquivoCedo = Path.GetFileName(arquivoTXT);
 
             //====================================
             // Lendo o arquivo
@@ -211,6 +224,7 @@ namespace proj_touchgraf_csharp___cedo
             foreach (string line in System.IO.File.ReadLines(@"" + arquivoTXT + ""))
             {                
                 counter++;
+                
 
                 sTIPO_REGISTRO = line.Substring(0, 1).Trim();
 
@@ -339,7 +353,8 @@ namespace proj_touchgraf_csharp___cedo
                                 //==========================================================================================
                                 ComandoSQL2.CommandText = "INSERT INTO " + oConfig.Tabela_Processamento
                                                    + " ("
-                                                   + "  DATA_GERACAO_ARQUIVO_CEDO "
+                                                   + "  ARQUIVO_CEDO_ORIGEM "
+                                                   + ", DATA_GERACAO_ARQUIVO_CEDO "
                                                    + ", HORA_GERACAO_ARQUIVO"
                                                    + ", CIF"
                                                    + ", CODIGO_MOTIVO_DEVOLUCAO"
@@ -364,7 +379,8 @@ namespace proj_touchgraf_csharp___cedo
                                                    + ", LINHA_REL_NEW"
                                                    + ") "
                                                    + "VALUES("
-                                                   + "'"  + sDATA_GERACAO_ARQUIVO_CEDO + "'"
+                                                   + " '" + sArquivoCedo + "'"
+                                                   + ",'" + sDATA_GERACAO_ARQUIVO_CEDO + "'"
                                                    + ",'" + sHORA_GERACAO_ARQUIVO + "'"
                                                    + ",'" + sCIF + "'"
                                                    + ",'" + sCODIGO_MOTIVO_DEVOLUCAO + "'"
@@ -400,7 +416,8 @@ namespace proj_touchgraf_csharp___cedo
                                 //==========================================================================================
                                 ComandoSQL2.CommandText = "INSERT INTO " + oConfig.Tabela_Processamento_history
                                                    + " ("
-                                                   + "  DATA_PROCESSAMENTO "
+                                                   + "  ARQUIVO_CEDO_ORIGEM "
+                                                   + ", DATA_PROCESSAMENTO "
                                                    + ", DATA_GERACAO_ARQUIVO_CEDO "
                                                    + ", HORA_GERACAO_ARQUIVO"
                                                    + ", CIF"
@@ -427,7 +444,8 @@ namespace proj_touchgraf_csharp___cedo
                                                    + ", LINHA_REL_NEW"
                                                    + ") "
                                                    + "VALUES("
-                                                   + " '" + oConfig.DataProcessamento_YYYYMMDD + "'"
+                                                   + " '" + sArquivoCedo + "'"
+                                                   + ",'" + oConfig.DataProcessamento_YYYYMMDD + "'"
                                                    + ",'" + sDATA_GERACAO_ARQUIVO_CEDO + "'"
                                                    + ",'" + sHORA_GERACAO_ARQUIVO + "'"
                                                    + ",'" + sCIF + "'"
@@ -510,7 +528,9 @@ namespace proj_touchgraf_csharp___cedo
             using (readerMySql = ComandoSQL.ExecuteReader())
             {
 
-                string sNomeArquivoSaida = NomeArquivoTXT;
+                string sNomeArquivoSaida = string.Empty;
+
+                sNomeArquivoSaida = NomeArquivoTXT;
 
                 // Cria o diretório caso não exista
                 if (!Directory.Exists(pathSaida))
@@ -624,6 +644,65 @@ namespace proj_touchgraf_csharp___cedo
                 }
             }
         }
+        public void startListaArquivoJaProcessados()
+        {
+
+            string sArquivoCedoOrigem = string.Empty;
+            oConfig.lstArquivosJaProcessados.Clear();
+
+            //==========================================================================================
+            //
+            // BUSCANDO O ERRO NA TABELA DE CÓDIGOS DE ERRO CEDO
+            //
+            //==========================================================================================                            
+            ComandoSQL2.CommandText = " SELECT ARQUIVO_CEDO_ORIGEM FROM " + oConfig.Tabela_Processamento_history
+                                    + " GROUP BY ARQUIVO_CEDO_ORIGEM"
+                                    + " ORDER BY ARQUIVO_CEDO_ORIGEM";
+            ComandoSQL2.Prepare();
+            using (readerMySql2 = ComandoSQL2.ExecuteReader())
+            {
+                while (readerMySql2.Read())
+                {
+                    sArquivoCedoOrigem = readerMySql2.GetString(0);
+                    oConfig.lstArquivosJaProcessados.Add(sArquivoCedoOrigem.Trim());
+
+                }
+            }
+            //==========================================================================================
+        }
+
+        public bool ArquivoJaProcessados(string arquivo)
+        {
+            bool result = false;
+
+            string sArquivoCedoOrigem = string.Empty;
+
+            //==========================================================================================
+            //
+            // BUSCANDO NA LISTA 
+            //
+            //==========================================================================================                            
+            if (oConfig.lstArquivosJaProcessados.IndexOf(arquivo) >= 0)
+                result = true;
+            //==========================================================================================
+
+            return result;
+        }
+
+        public void reverterArquivoJaProceessado(string arquivo)
+        {
+            //==========================================================================================
+            //
+            // INSERINDO NA TABELA PROCESSAMENTO HISTORY
+            //
+            //==========================================================================================
+            ComandoSQL2.CommandText = " DELETE FROM " + oConfig.Tabela_Processamento_history
+                                    + " WHERE ARQUIVO_CEDO_ORIGEM = '" + arquivo + "'";
+            ComandoSQL2.ExecuteNonQuery();
+            //==========================================================================================
+        }
 
     }
+
+
 }

@@ -4,7 +4,8 @@ USE @Database;
 
 DROP TABLE IF EXISTS @Tabela_Processamento;
 CREATE TABLE IF NOT EXISTS @Tabela_Processamento (
-   DATA_GERACAO_ARQUIVO_CEDO    varchar(008) default NULL
+   ARQUIVO_CEDO_ORIGEM          varchar(050) default NULL
+  ,DATA_GERACAO_ARQUIVO_CEDO    varchar(008) default NULL
   ,HORA_GERACAO_ARQUIVO         varchar(004) default NULL
   ,CIF                          varchar(034) default NULL
   ,CODIGO_MOTIVO_DEVOLUCAO      varchar(002) default NULL
@@ -32,7 +33,8 @@ CREATE TABLE IF NOT EXISTS @Tabela_Processamento (
 );
 
 CREATE TABLE IF NOT EXISTS @Tabela_Processamento_history (
-   DATA_PROCESSAMENTO           varchar(008) default NULL
+   ARQUIVO_CEDO_ORIGEM          varchar(050) default NULL
+  ,DATA_PROCESSAMENTO           varchar(008) default NULL
   ,DATA_GERACAO_ARQUIVO_CEDO    varchar(008) default NULL
   ,HORA_GERACAO_ARQUIVO         varchar(004) default NULL
   ,CIF                          varchar(034) default NULL
@@ -60,6 +62,8 @@ CREATE TABLE IF NOT EXISTS @Tabela_Processamento_history (
   ,LINHA_REL_ORIGEM             TEXT
   ,LINHA_REL_NEW                TEXT
   ,PRIMARY KEY  (SEQUENCIA)
+  ,KEY idx_processamento_history_01 (ARQUIVO_CEDO_ORIGEM)
+  ,KEY idx_processamento_history_02 (DATA_PROCESSAMENTO)
 );
 
 DROP TABLE IF EXISTS @Tabela_Codigos_status;
@@ -67,7 +71,7 @@ CREATE TABLE IF NOT EXISTS @Tabela_Codigos_status(
    CODIGO               varchar(002)          NOT NULL
   ,DESCRICAO            varchar(050)          NOT NULL
   ,PRIMARY KEY (CODIGO)
-  ,KEY idx_codigos_motivos_devolucao (CODIGO)
+  ,KEY idx_codigos_status (CODIGO)
 );
 
 INSERT INTO @Tabela_Codigos_status(CODIGO, DESCRICAO)

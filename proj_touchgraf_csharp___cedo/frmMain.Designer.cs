@@ -28,61 +28,66 @@
         /// </summary>
         private void InitializeComponent()
         {
-
             this.tbc_Opcoes = new System.Windows.Forms.TabControl();
-            this.tbp_Entrada = new System.Windows.Forms.TabPage();
+            this.tab_Entrada = new System.Windows.Forms.TabPage();
             this.lbl_SelecionePathEntrada = new System.Windows.Forms.Label();
             this.btn_MarcarTodos = new System.Windows.Forms.Button();
             this.btn_DesmarcarTodos = new System.Windows.Forms.Button();
             this.chkl_Arquivos = new System.Windows.Forms.CheckedListBox();
             this.btn_SelecionarPath = new System.Windows.Forms.Button();
             this.txt_PathEntrada = new System.Windows.Forms.TextBox();
-            this.tbp_Saida = new System.Windows.Forms.TabPage();
+            this.tab_Saida = new System.Windows.Forms.TabPage();
             this.lbl_SelecionePathSaidaLabel = new System.Windows.Forms.Label();
             this.btn_SelecionaPathSaida = new System.Windows.Forms.Button();
             this.txt_PathSaida = new System.Windows.Forms.TextBox();
-            this.tbp_Processamento = new System.Windows.Forms.TabPage();
+            this.tab_Processamento = new System.Windows.Forms.TabPage();
             this.btn_Processar = new System.Windows.Forms.Button();
             this.dtp_DataProcessamento = new System.Windows.Forms.DateTimePicker();
+            this.tab_JaProcessados = new System.Windows.Forms.TabPage();
+            this.btn_Reverter = new System.Windows.Forms.Button();
+            this.btn_MarcarTodosProcessados = new System.Windows.Forms.Button();
+            this.btn_DesmarcarTodosProcessados = new System.Windows.Forms.Button();
+            this.chkl_ArquivosProcessados = new System.Windows.Forms.CheckedListBox();
             this.btn_Sobre = new System.Windows.Forms.Button();
             this.btn_Sair = new System.Windows.Forms.Button();
             this.folderBrowserDialogPathEntrada = new System.Windows.Forms.FolderBrowserDialog();
             this.tbc_Opcoes.SuspendLayout();
-            this.tbp_Entrada.SuspendLayout();
-            this.tbp_Saida.SuspendLayout();
-            this.tbp_Processamento.SuspendLayout();
+            this.tab_Entrada.SuspendLayout();
+            this.tab_Saida.SuspendLayout();
+            this.tab_Processamento.SuspendLayout();
+            this.tab_JaProcessados.SuspendLayout();
             this.SuspendLayout();
-
             // 
             // tbc_Opcoes
             // 
-            this.tbc_Opcoes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.tbc_Opcoes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbc_Opcoes.Controls.Add(this.tbp_Entrada);
-            this.tbc_Opcoes.Controls.Add(this.tbp_Saida);
-            this.tbc_Opcoes.Controls.Add(this.tbp_Processamento);
+            this.tbc_Opcoes.Controls.Add(this.tab_Entrada);
+            this.tbc_Opcoes.Controls.Add(this.tab_Saida);
+            this.tbc_Opcoes.Controls.Add(this.tab_Processamento);
+            this.tbc_Opcoes.Controls.Add(this.tab_JaProcessados);
             this.tbc_Opcoes.Location = new System.Drawing.Point(23, 12);
             this.tbc_Opcoes.Name = "tbc_Opcoes";
             this.tbc_Opcoes.SelectedIndex = 0;
             this.tbc_Opcoes.Size = new System.Drawing.Size(669, 366);
             this.tbc_Opcoes.TabIndex = 0;
             // 
-            // tbp_Entrada
+            // tab_Entrada
             // 
-            this.tbp_Entrada.Controls.Add(this.lbl_SelecionePathEntrada);
-            this.tbp_Entrada.Controls.Add(this.btn_MarcarTodos);
-            this.tbp_Entrada.Controls.Add(this.btn_DesmarcarTodos);
-            this.tbp_Entrada.Controls.Add(this.chkl_Arquivos);
-            this.tbp_Entrada.Controls.Add(this.btn_SelecionarPath);
-            this.tbp_Entrada.Controls.Add(this.txt_PathEntrada);
-            this.tbp_Entrada.Location = new System.Drawing.Point(4, 24);
-            this.tbp_Entrada.Name = "tbp_Entrada";
-            this.tbp_Entrada.Padding = new System.Windows.Forms.Padding(3);
-            this.tbp_Entrada.Size = new System.Drawing.Size(661, 338);
-            this.tbp_Entrada.TabIndex = 0;
-            this.tbp_Entrada.Text = "Entrada";
-            this.tbp_Entrada.UseVisualStyleBackColor = true;
+            this.tab_Entrada.Controls.Add(this.lbl_SelecionePathEntrada);
+            this.tab_Entrada.Controls.Add(this.btn_MarcarTodos);
+            this.tab_Entrada.Controls.Add(this.btn_DesmarcarTodos);
+            this.tab_Entrada.Controls.Add(this.chkl_Arquivos);
+            this.tab_Entrada.Controls.Add(this.btn_SelecionarPath);
+            this.tab_Entrada.Controls.Add(this.txt_PathEntrada);
+            this.tab_Entrada.Location = new System.Drawing.Point(4, 24);
+            this.tab_Entrada.Name = "tab_Entrada";
+            this.tab_Entrada.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Entrada.Size = new System.Drawing.Size(661, 338);
+            this.tab_Entrada.TabIndex = 0;
+            this.tab_Entrada.Text = "Entrada";
+            this.tab_Entrada.UseVisualStyleBackColor = true;
             // 
             // lbl_SelecionePathEntrada
             // 
@@ -117,8 +122,8 @@
             // 
             // chkl_Arquivos
             // 
-            this.chkl_Arquivos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.chkl_Arquivos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chkl_Arquivos.FormattingEnabled = true;
             this.chkl_Arquivos.Location = new System.Drawing.Point(3, 90);
@@ -139,7 +144,7 @@
             // 
             // txt_PathEntrada
             // 
-            this.txt_PathEntrada.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txt_PathEntrada.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_PathEntrada.Location = new System.Drawing.Point(6, 31);
             this.txt_PathEntrada.Name = "txt_PathEntrada";
@@ -147,18 +152,18 @@
             this.txt_PathEntrada.TabIndex = 0;
             this.txt_PathEntrada.TextChanged += new System.EventHandler(this.txt_PathEntrada_TextChanged);
             // 
-            // tbp_Saida
+            // tab_Saida
             // 
-            this.tbp_Saida.Controls.Add(this.lbl_SelecionePathSaidaLabel);
-            this.tbp_Saida.Controls.Add(this.btn_SelecionaPathSaida);
-            this.tbp_Saida.Controls.Add(this.txt_PathSaida);
-            this.tbp_Saida.Location = new System.Drawing.Point(4, 24);
-            this.tbp_Saida.Name = "tbp_Saida";
-            this.tbp_Saida.Padding = new System.Windows.Forms.Padding(3);
-            this.tbp_Saida.Size = new System.Drawing.Size(661, 338);
-            this.tbp_Saida.TabIndex = 1;
-            this.tbp_Saida.Text = "Saída";
-            this.tbp_Saida.UseVisualStyleBackColor = true;
+            this.tab_Saida.Controls.Add(this.lbl_SelecionePathSaidaLabel);
+            this.tab_Saida.Controls.Add(this.btn_SelecionaPathSaida);
+            this.tab_Saida.Controls.Add(this.txt_PathSaida);
+            this.tab_Saida.Location = new System.Drawing.Point(4, 24);
+            this.tab_Saida.Name = "tab_Saida";
+            this.tab_Saida.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Saida.Size = new System.Drawing.Size(661, 338);
+            this.tab_Saida.TabIndex = 1;
+            this.tab_Saida.Text = "Saída";
+            this.tab_Saida.UseVisualStyleBackColor = true;
             // 
             // lbl_SelecionePathSaidaLabel
             // 
@@ -182,24 +187,24 @@
             // 
             // txt_PathSaida
             // 
-            this.txt_PathSaida.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txt_PathSaida.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_PathSaida.Location = new System.Drawing.Point(6, 147);
             this.txt_PathSaida.Name = "txt_PathSaida";
             this.txt_PathSaida.Size = new System.Drawing.Size(607, 23);
             this.txt_PathSaida.TabIndex = 0;
             // 
-            // tbp_Processamento
+            // tab_Processamento
             // 
-            this.tbp_Processamento.Controls.Add(this.btn_Processar);
-            this.tbp_Processamento.Controls.Add(this.dtp_DataProcessamento);
-            this.tbp_Processamento.Location = new System.Drawing.Point(4, 24);
-            this.tbp_Processamento.Name = "tbp_Processamento";
-            this.tbp_Processamento.Padding = new System.Windows.Forms.Padding(3);
-            this.tbp_Processamento.Size = new System.Drawing.Size(661, 338);
-            this.tbp_Processamento.TabIndex = 2;
-            this.tbp_Processamento.Text = "Processamento";
-            this.tbp_Processamento.UseVisualStyleBackColor = true;
+            this.tab_Processamento.Controls.Add(this.btn_Processar);
+            this.tab_Processamento.Controls.Add(this.dtp_DataProcessamento);
+            this.tab_Processamento.Location = new System.Drawing.Point(4, 24);
+            this.tab_Processamento.Name = "tab_Processamento";
+            this.tab_Processamento.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Processamento.Size = new System.Drawing.Size(661, 338);
+            this.tab_Processamento.TabIndex = 2;
+            this.tab_Processamento.Text = "Processamento";
+            this.tab_Processamento.UseVisualStyleBackColor = true;
             // 
             // btn_Processar
             // 
@@ -218,6 +223,63 @@
             this.dtp_DataProcessamento.Name = "dtp_DataProcessamento";
             this.dtp_DataProcessamento.Size = new System.Drawing.Size(264, 23);
             this.dtp_DataProcessamento.TabIndex = 0;
+            // 
+            // tab_JaProcessados
+            // 
+            this.tab_JaProcessados.Controls.Add(this.btn_Reverter);
+            this.tab_JaProcessados.Controls.Add(this.btn_MarcarTodosProcessados);
+            this.tab_JaProcessados.Controls.Add(this.btn_DesmarcarTodosProcessados);
+            this.tab_JaProcessados.Controls.Add(this.chkl_ArquivosProcessados);
+            this.tab_JaProcessados.Location = new System.Drawing.Point(4, 24);
+            this.tab_JaProcessados.Name = "tab_JaProcessados";
+            this.tab_JaProcessados.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_JaProcessados.Size = new System.Drawing.Size(661, 338);
+            this.tab_JaProcessados.TabIndex = 3;
+            this.tab_JaProcessados.Text = "Reverter Processamento";
+            this.tab_JaProcessados.UseVisualStyleBackColor = true;
+            // 
+            // btn_Reverter
+            // 
+            this.btn_Reverter.Location = new System.Drawing.Point(389, 16);
+            this.btn_Reverter.Name = "btn_Reverter";
+            this.btn_Reverter.Size = new System.Drawing.Size(224, 23);
+            this.btn_Reverter.TabIndex = 7;
+            this.btn_Reverter.Text = "Reverter processamento";
+            this.btn_Reverter.UseVisualStyleBackColor = true;
+            this.btn_Reverter.Click += new System.EventHandler(this.btn_Reverter_Click);
+            // 
+            // btn_MarcarTodosProcessados
+            // 
+            this.btn_MarcarTodosProcessados.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_MarcarTodosProcessados.Location = new System.Drawing.Point(389, 60);
+            this.btn_MarcarTodosProcessados.Name = "btn_MarcarTodosProcessados";
+            this.btn_MarcarTodosProcessados.Size = new System.Drawing.Size(109, 23);
+            this.btn_MarcarTodosProcessados.TabIndex = 6;
+            this.btn_MarcarTodosProcessados.Text = "Marcar Todos";
+            this.btn_MarcarTodosProcessados.UseVisualStyleBackColor = true;
+            this.btn_MarcarTodosProcessados.Click += new System.EventHandler(this.btn_MarcarTodosProcessados_Click);
+            // 
+            // btn_DesmarcarTodosProcessados
+            // 
+            this.btn_DesmarcarTodosProcessados.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_DesmarcarTodosProcessados.Location = new System.Drawing.Point(504, 60);
+            this.btn_DesmarcarTodosProcessados.Name = "btn_DesmarcarTodosProcessados";
+            this.btn_DesmarcarTodosProcessados.Size = new System.Drawing.Size(109, 23);
+            this.btn_DesmarcarTodosProcessados.TabIndex = 5;
+            this.btn_DesmarcarTodosProcessados.Text = "Desmarcar Todos";
+            this.btn_DesmarcarTodosProcessados.UseVisualStyleBackColor = true;
+            this.btn_DesmarcarTodosProcessados.Click += new System.EventHandler(this.btn_DesmarcarTodosProcessados_Click);
+            // 
+            // chkl_ArquivosProcessados
+            // 
+            this.chkl_ArquivosProcessados.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkl_ArquivosProcessados.FormattingEnabled = true;
+            this.chkl_ArquivosProcessados.Location = new System.Drawing.Point(3, 90);
+            this.chkl_ArquivosProcessados.Name = "chkl_ArquivosProcessados";
+            this.chkl_ArquivosProcessados.Size = new System.Drawing.Size(652, 238);
+            this.chkl_ArquivosProcessados.TabIndex = 3;
             // 
             // btn_Sobre
             // 
@@ -239,7 +301,6 @@
             this.btn_Sair.Text = "Sair";
             this.btn_Sair.UseVisualStyleBackColor = true;
             this.btn_Sair.Click += new System.EventHandler(this.btn_Sair_Click);
-
             // 
             // frmMain
             // 
@@ -253,25 +314,23 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.tbc_Opcoes.ResumeLayout(false);
-            this.tbp_Entrada.ResumeLayout(false);
-            this.tbp_Entrada.PerformLayout();
-            this.tbp_Saida.ResumeLayout(false);
-            this.tbp_Saida.PerformLayout();
-            this.tbp_Processamento.ResumeLayout(false);
+            this.tab_Entrada.ResumeLayout(false);
+            this.tab_Entrada.PerformLayout();
+            this.tab_Saida.ResumeLayout(false);
+            this.tab_Saida.PerformLayout();
+            this.tab_Processamento.ResumeLayout(false);
+            this.tab_JaProcessados.ResumeLayout(false);
             this.ResumeLayout(false);
-
-
-
 
         }
 
         #endregion
         private TabControl tbc_Opcoes;
-        private TabPage tbp_Entrada;
-        private TabPage tbp_Saida;
+        private TabPage tab_Entrada;
+        private TabPage tab_Saida;
         private Button btn_Sobre;
         private Button btn_Sair;
-        private TabPage tbp_Processamento;
+        private TabPage tab_Processamento;
         private Button btn_SelecionarPath;
         private TextBox txt_PathEntrada;
         private FolderBrowserDialog folderBrowserDialogPathEntrada;
@@ -284,6 +343,10 @@
         private DateTimePicker dtp_DataProcessamento;
         private Button btn_Processar;
         private Label lbl_SelecionePathEntrada;
-
+        private TabPage tab_JaProcessados;
+        private CheckedListBox chkl_ArquivosProcessados;
+        private Button btn_MarcarTodosProcessados;
+        private Button btn_DesmarcarTodosProcessados;
+        private Button btn_Reverter;
     }
 }

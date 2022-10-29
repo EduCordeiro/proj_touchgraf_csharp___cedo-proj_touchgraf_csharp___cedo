@@ -25,10 +25,14 @@ public class ObjConf
     public string? ProdutoCarneEspecifico { get; set; }
     public string? ProdutoCarneEspecificoLabel { get; set; }
 
+    public List<string> lstArquivosJaProcessados { get; set; } 
+
     //public static ObjConf getInstance ()
     public ObjConf(){
         DataProcessamento = String.Empty;
         PathEntrada = String.Empty;
+
+        lstArquivosJaProcessados = new List<string>();
 
     }
     
