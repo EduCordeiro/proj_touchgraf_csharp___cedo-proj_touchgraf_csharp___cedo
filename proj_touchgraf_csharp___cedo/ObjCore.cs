@@ -281,8 +281,8 @@ namespace proj_touchgraf_csharp___cedo
                             //==========================================================================================                            
                             sCODIGO_STATUS = readerMySql.GetString(3);
                             ComandoSQL2.CommandText = " SELECT DESCRICAO FROM " + oConfig.Tabela_Codigos_status
-                                                   + " WHERE CODIGO = '" + sCODIGO_MOTIVO_DEVOLUCAO + "' "
-                                                   + " LIMIT 1";
+                                                    + " WHERE CODIGO = '" + sCODIGO_MOTIVO_DEVOLUCAO + "' "
+                                                    + " LIMIT 1";
                             ComandoSQL2.Prepare();
                             using (readerMySql2 = ComandoSQL2.ExecuteReader())
                             {
@@ -297,6 +297,12 @@ namespace proj_touchgraf_csharp___cedo
                             if (sTIPO_DOCUMENTO == "CARNE") {
 
                                 sLinha = readerMySql.GetString(0);
+
+                                //==========================================================================================================================
+                                // PREENCHO À DIREITA DA LINHA COM ESPAÇOS PARA NÃO CAUSAR EXCESSÃO NO MÉTODO SUBSTRING COM LINHAS MENORES AO TAMANHO MÁXIMO
+                                //==========================================================================================================================
+                                sLinha = sLinha.PadRight(2963);
+                                //==========================================================================================================================
 
                                 sProdutoCarne = sLinha.Substring(23, 3).Trim();
 
